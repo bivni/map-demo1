@@ -35,7 +35,7 @@ geotagsMGU <- read.table(header=TRUE,
                          row.names=1,
                          sep=",",
                          text=
-"name,url,longtitude,latitude
+"name,url,latitude,longitude
 Главное здание МГУ, http://www.msu.ru/info/map/gz.html, 55.703056, 37.530556
 Экономический факультет МГУ, http://econ.msu.ru, 55.696040, 37.537793
 Ботанический сад МГУ, http://botsad.msu.ru, 55.707701, 37.527202
@@ -49,12 +49,41 @@ geotagsMGU <- read.table(header=TRUE,
 * функция `autoformat(xtab)` автоматически выравнивает текстовые столбцы по левому, а числовые -- по правому краю (по разрядам)
 * параметр `zap=5` -- 5 цифр после "запятой" в числовых полях
 
-```{r, results="asis",digits=5}
+```{r, results="asis", digits=5}
 xtab <-  xtable(geotagsMGU ) %>% autoformat(zap=5)
 caption(xtab) <- "Таблица 1. Координаты объектов МГУ"
-print(xtab,type="html",caption.placement="top",html.table.attributes="border='3' width='100%'")
+print(xtab,type="html", caption.placement="top", html.table.attributes="border='3' width='100%'")
 
 ```
+
+## Рисуем карты и наносим объекты с всплывающими описаниями
+
+Создадим объект-карту 
+
+```{r}
+m <- leaflet() %>% 
+     addTiles() 
+```
+
+Создадим фрейм данных, состоящий только из строчки про Экономический факультет.
+
+```{r}
+geotagsEF <-  geotagsMGU["Экономический факультет МГУ",]
+
+geotagsEF
+```
+
+Установим масштаб (zoom) карты и укажем 1 точку в центре ее
+Если нажать на точку, появится всплывающее окно (popup window)
+
+```{r}
+m %>% 
+  setView(lng=geotagsEF$longitude, lat=geotagsEF$latitude, zoom = 15) %>%
+  addMarkers(lng=geotagsEF$longitude, lat=geotagsEF$latitude, 
+    popup="<b>ЭФ МГУ</b><br><a href='http://www.econ.msu.ru'>сайт факультета</a>")
+```
+
+
 
 ### Загружаем внешние файлы
 
@@ -83,19 +112,19 @@ ct_count
 ## Просто ставим точку на карте 
 
 
+
 ```{r}
 
 m <- leaflet() %>%
   addTiles() %>%  
   setView(-72.690940, 41.651426, zoom = 8) %>%
   addMarkers(lng=-72.690940, lat=41.651426, popup="<b>Hello</b><br><a href='http://www.trendct.org'>-TrendCT.org</a>")
-m 
-
+m   
 ```
 
 И точку у нас
 
-```{r}
+```{r,eval=FALSE}
 
 econ.long <-  37.537793
 econ.latt  <-55.696040
