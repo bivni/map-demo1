@@ -7,7 +7,6 @@ output: html_document
 
 # Нанесение точек
 
-Источник <http://trendct.org/2015/06/26/tutorial-how-to-put-dots-on-a-leaflet-map-with-r/#chapterTOC6>
 
 Включаем библиотеки 
 
@@ -15,6 +14,7 @@ output: html_document
 library(leaflet)
 library(dplyr)
 library(xtable)
+library(htmltools)
 
 ```
 
@@ -44,7 +44,7 @@ geotagsMGU <- read.table(header=TRUE,
 ")
 ```
 
-### Форматируем таблицу для выдачи в аккуратном виде
+### Форматируем таблицу координат для выдачи в аккуратном виде
 
 * функция `autoformat(xtab)` автоматически выравнивает текстовые столбцы по левому, а числовые -- по правому краю (по разрядам)
 * параметр `zap=5` -- 5 цифр после "запятой" в числовых полях
@@ -83,57 +83,4 @@ m %>%
     popup="<b>ЭФ МГУ</b><br><a href='http://www.econ.msu.ru'>сайт факультета</a>")
 ```
 
-
-
-### Загружаем внешние файлы
-
-```{r, echo=TRUE}
-
-file.exists("data") || dir.create("data")
-file.exists("data/ctlist.csv") || download.file(url = "https://github.com/trendct/walkthroughs/raw/master/0615-leaflet-r/ctlist.csv",destfile = "data/ctlist.csv")
-dunk  <-  read.csv("data/ctlist.csv")
-
-```
-
-## Считаем сколько раз встречается в штате Коннектикут заведения Dunkin' Donuts в каждом городе
-
-```{r}
-
-# USING THE PIPE OPERATOR
-ct_count <- dunk %>% filter(state=="CT") %>% count(city) # This is saying take the 'dunk' data frame, filter it, and then count how often 'city' appears
-
-# Note: the filter() and count() functions are from the 'dplyr' package that you loaded earlier
-
-ct_count
-```
-
-
-
-## Просто ставим точку на карте 
-
-
-
-```{r}
-
-m <- leaflet() %>%
-  addTiles() %>%  
-  setView(-72.690940, 41.651426, zoom = 8) %>%
-  addMarkers(lng=-72.690940, lat=41.651426, popup="<b>Hello</b><br><a href='http://www.trendct.org'>-TrendCT.org</a>")
-m   
-```
-
-И точку у нас
-
-```{r,eval=FALSE}
-
-econ.long <-  37.537793
-econ.latt  <-55.696040
-m1 <- leaflet() %>%
-  addTiles() %>%  
-  setView(econ.long, econ.latt, zoom = 15) %>%
-  addMarkers(lng=econ.long, lat=econ.latt, popup="<b>ЭФ МГУ</b><br><a href='http://www.econ.msu.ru'>-сайт факультета</a>")
-m1 
-
-
-```
 
