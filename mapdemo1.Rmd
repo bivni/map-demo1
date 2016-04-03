@@ -14,11 +14,46 @@ output: html_document
 ```{r libaries ,message=FALSE,results='hide'}
 library(leaflet)
 library(dplyr)
+library(xtable)
 
 ```
 
 
 ## Грузим данные 
+
+Загружаем  данные о нескольких знаниях МГУ в формате:
+
+* название (name),
+* адрес сайта (url)
+* долгота (longitude)
+* широта (latitude)
+
+
+```{r}
+geotagsMGU <- read.table(header=TRUE,
+                         as.is=TRUE,
+                         row.names=1,
+                         sep=",",
+                         text=
+"name,url,longtitude,latitude
+Главное здание МГУ,http://www.msu.ru/info/map/gz.html,55.703056,37.530556
+Экономический факультет МГУ,http://econ.msu.ru,37.537793,55.696040
+Ботанический сад МГУ,http://botsad.msu.ru,55.707701,37.527202
+Дом аспиранта и стажера МГУ (ДАС),http://www.msu.ru/depts/host/das.html,55.691361,37.595927
+Филиал дома студента МГУ (ФДС),http://www.msu.ru/depts/host/fds.html,55.707039,37.509166
+")
+```
+
+### Форматируем таблицу для выдачи в аккуратном виде
+
+```{r, results="asis",digits=5}
+xtab <-  xtable(geotagsMGU ) %>% autoformat(zap=5)
+caption(xtab) <- "Таблица 1. Координаты объектов МГУ"
+print(xtab,type="html")
+
+```
+
+
 
 ```{r, echo=TRUE}
 
