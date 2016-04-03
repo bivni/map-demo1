@@ -116,8 +116,10 @@ leaflet(geotagsEF) %>%
 В следующем примере выводим сразу несколько точек и функция clearBounds()  устанавливает автоматическое определение границ карты по разбросу точек.
 
 ```{r}
-leaflet(geotagsMGU) %>%
+leaflet(data=geotagsMGU) %>%
   addTiles() %>% 
   clearBounds( ) %>%
     addMarkers(~longitude,~latitude,popup=htmlEscape(~name))  
 ```
+
+Фрейм данных по умолчанию указан еще в функции leaflet(), а в остальных  функциях пакета leaflet мы можем ссылаться на столбцы этого dataframe в форме `~имяСтолбца` .
