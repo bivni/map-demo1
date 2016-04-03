@@ -56,7 +56,7 @@ print(xtab,type="html", caption.placement="bottom", html.table.attributes="borde
 
 ```
 
-Для удобства добавим столбец name в фрейм данных geotagsMGU
+Для удобства добавим в фрейм данных geotagsMGU столбец name, дублирующий номера строк. 
 
 ```{r}
 geotagsMGU$name <- rownames(geotagsMGU)
