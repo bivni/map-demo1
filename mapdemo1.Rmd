@@ -107,3 +107,12 @@ leaflet(geotagsEF) %>%
     addMarkers(~longitude,~latitude,popup=htmlEscape(~name))  
 ```
 
+
+В следующем примере выводим сразу несколько точек и функция clearBounds()  устанавливает автоматическое определение границ карты по разбросу точек.
+
+```{r}
+leaflet(geotagsMGU) %>%
+  addTiles() %>% 
+  clearBounds( ) %>%
+    addMarkers(~longitude,~latitude,popup=htmlEscape(~name))  
+```
