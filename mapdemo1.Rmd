@@ -56,6 +56,13 @@ print(xtab,type="html", caption.placement="top", html.table.attributes="border='
 
 ```
 
+Для удобства добавим столбец name в фрейм данных geotagsMGU
+
+```{r}
+geotagsMGU$name <- rownames(geotagsMGU)
+```
+
+
 ## Рисуем карты и наносим объекты с всплывающими описаниями
 
 Создадим объект-карту 
@@ -83,4 +90,20 @@ m %>%
     popup="<b>ЭФ МГУ</b><br><a href='http://www.econ.msu.ru'>сайт факультета</a>")
 ```
 
+
+Теперь указываем не масштаб, а границы. Хотим чтобы карта включала прямоугольник, диагональ которого проведена между 2-мя общежитиями ДАС и ФДС. Используем функцию fitBounds() для определения границ карты.
+
+```{r}
+geotagsDAS <- geotagsMGU["Дом аспиранта и стажера МГУ (ДАС)",]
+geotagsFDS <- geotagsMGU["Филиал дома студента МГУ (ФДС)",]
+leaflet(geotagsEF) %>%
+  addTiles() %>% 
+  fitBounds(
+    lng1 = geotagsFDS$longitude,
+    lat1 = geotagsFDS$latitude,
+    lng2 = geotagsDAS$longitude,
+    lat2 = geotagsDAS$latitude
+            ) %>%
+    addMarkers(~longitude,~latitude,popup=htmlEscape(~name))  
+```
 
