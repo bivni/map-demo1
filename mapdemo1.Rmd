@@ -47,11 +47,13 @@ geotagsMGU <- read.table(header=TRUE,
 
 ### Форматируем таблицу координат для выдачи в аккуратном виде
 
-* функция `autoformat(xtab)` автоматически выравнивает текстовые столбцы по левому, а числовые -- по правому краю (по разрядам)
-* параметр `zap=5` -- 5 цифр после "запятой" в числовых полях
+Параметры `xtable()`:
 
-```{r, results="asis", digits=5}
-xtab <-  xtable(geotagsMGU ) %>% autoformat(zap=5)
+* параметр `auto=T` автоматически выравнивает текстовые столбцы по левому, а числовые -- по правому краю (по разрядам)
+* параметр `digits=5` -- 5 цифр после "запятой" в числовых полях
+
+```{r, results="asis"}
+xtab <-  xtable(geotagsMGU,auto=T,digits=5 )
 caption(xtab) <- "Таблица 1. Координаты объектов МГУ"
 print(xtab,type="html", caption.placement="bottom", html.table.attributes="border='3' width='100%'")
 
@@ -77,7 +79,7 @@ geotagsMGU$name <- rownames(geotagsMGU)
 geotagsEF <-  geotagsMGU["Экономический факультет МГУ",]
 ```
 ```{r,results="asis"}
-print(xtable(geotagsEF,digits=4,auto=T), type="html")
+geotagsEF %>% xtable(digits=4,auto=T) %>% print(type="html")
 ```
 
 Создадим объект-карту 
