@@ -12,10 +12,10 @@ output: html_document
 ### Включаем библиотеки 
 
 ```{r libaries ,message=FALSE,warning=FALSE}
-library(leaflet)
-library(dplyr)
-library(xtable)
-library(htmltools)
+library(leaflet) # рисование карт
+library(dplyr)   # оператор %>% (pipe) и функции манипуляций с данными
+library(xtable)  # вывод таблиц в документах LaTeX и Web
+library(htmltools) # вспомогательные функции при генерации web content'а
 
 ```
 
