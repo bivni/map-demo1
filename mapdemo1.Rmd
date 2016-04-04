@@ -60,7 +60,7 @@ caption(xtab) <- "Таблица 1. Координаты объектов МГУ
 print(xtab,type="html", caption.placement="bottom", html.table.attributes="border='3' width='100%'")
 
 ```
-
+---
 Для удобства добавим в фрейм данных geotagsMGU столбец name, дублирующий названия строк. 
 
 ```{r}
@@ -83,7 +83,7 @@ geotagsEF <-  geotagsMGU["Экономический факультет МГУ",
 ```{r,results="asis"}
 geotagsEF %>% xtable(digits=4,auto=T) %>% print(type="html")
 ```
-
+---
 Создадим объект-карту 
 
 ```{r}
