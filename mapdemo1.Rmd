@@ -42,7 +42,7 @@ geotagsMGU <- read.table(header=TRUE,
 Главное здание МГУ, http://www.msu.ru/info/map/gz.html, 55.703056, 37.530556
 Экономический факультет МГУ, http://econ.msu.ru, 55.696040, 37.537793
 Ботанический сад МГУ, http://botsad.msu.ru, 55.707701, 37.527202
-Дом аспиранта и стажера МГУ (ДАС), http://www.msu.ru/depts/host/das.html, 55.691361, 37.595927
+Дом аспиранта и стажера МГУ (ДАС), http://www.msu.ru/depts/host/das.html, 55.690314, 37.594432
 Филиал дома студента МГУ (ФДС), http://www.msu.ru/depts/host/fds.html, 55.707039, 37.509166
 ")
 ```
