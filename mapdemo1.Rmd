@@ -7,8 +7,9 @@ output: html_document
 
 # Тема 1. Нанесение точек и установление границ карты
 
+Документация библиотеки leaflet <https://rstudio.github.io/leaflet/> 
 
-Включаем библиотеки 
+### Включаем библиотеки 
 
 ```{r libaries ,message=FALSE,warning=FALSE}
 library(leaflet)
@@ -69,6 +70,16 @@ geotagsMGU$name <- rownames(geotagsMGU)
 
 ### Пример 1. Один объект. Границы карты определяются масштабом и координатами центра
 
+
+Создадим фрейм данных, состоящий только из строчки про Экономический факультет.
+
+```{r}
+geotagsEF <-  geotagsMGU["Экономический факультет МГУ",]
+```
+```{r,results="asis"}
+print(xtable(geotagsEF),auto=T,type="html")
+```
+
 Создадим объект-карту 
 
 ```{r}
@@ -76,15 +87,8 @@ m <- leaflet() %>%
      addTiles() 
 ```
 
-Создадим фрейм данных, состоящий только из строчки про Экономический факультет.
-
-```{r}
-geotagsEF <-  geotagsMGU["Экономический факультет МГУ",]
-
-geotagsEF
-```
-
-Установим масштаб (zoom) карты и укажем 1 точку в качестве центра карты при помощи функции `setView()`
+Установим масштаб (zoom) карты и укажем 1 точку (Экономический факультет) в качестве центра карты при помощи функции `setView()`
+При помощи `addMarkers()` нанесем маркер со всплывающим окном в этой же точке.
 Если нажать на точку, появится всплывающее окно (popup window)
 
 ```{r}
@@ -109,7 +113,7 @@ leaflet(geotagsEF) %>%
     lng2 = geotagsDAS$longitude,
     lat2 = geotagsDAS$latitude
             ) %>%
-    addMarkers(~longitude,~latitude,popup=htmlEscape(~name))  
+    addMarkers(~longitude,~latitude,popup=~htmlEscape(name))  
 ```
 
 ### Пример 3. Много объектов. Границы карты определяются автоматически
@@ -120,7 +124,7 @@ leaflet(geotagsEF) %>%
 leaflet(data=geotagsMGU) %>%
   addTiles() %>% 
   clearBounds( ) %>%
-    addMarkers(~longitude,~latitude,popup=htmlEscape(~name))  
+    addMarkers(~longitude,~latitude,popup=~htmlEscape(name))  
 ```
 
 Фрейм данных по умолчанию указан еще в функции `leaflet()`, а в остальных  функциях пакета leaflet мы можем ссылаться на столбцы этого dataframe в форме `~имяСтолбца` и указывать параметром `data=` другой dataframe, если нужно.
