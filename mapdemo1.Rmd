@@ -42,8 +42,8 @@ geotagsMGU <- read.table(header=TRUE,
 Главное здание МГУ, http://www.msu.ru/info/map/gz.html, 55.703056, 37.530556
 Экономический факультет МГУ, http://econ.msu.ru, 55.696040, 37.537793
 Ботанический сад МГУ, http://botsad.msu.ru, 55.707701, 37.527202
-Дом аспиранта и стажера МГУ (ДАС), http://www.msu.ru/depts/host/das.html, 55.690314, 37.594432
-Филиал дома студента МГУ (ФДС), http://www.msu.ru/depts/host/fds.html, 55.707039, 37.509166
+Дом аспиранта и стажера МГУ <ДАС>, http://www.msu.ru/depts/host/das.html, 55.690314, 37.594432
+Филиал дома студента МГУ <ФДС>, http://www.msu.ru/depts/host/fds.html, 55.707039, 37.509166
 ")
 ```
 
@@ -107,8 +107,8 @@ m %>%
 Теперь указываем не масштаб, а границы. Хотим чтобы карта включала прямоугольник, диагональ которого проведена между 2-мя общежитиями ДАС и ФДС. Используем функцию fitBounds() для определения границ карты.
 
 ```{r}
-geotagsDAS <- geotagsMGU["Дом аспиранта и стажера МГУ (ДАС)",]
-geotagsFDS <- geotagsMGU["Филиал дома студента МГУ (ФДС)",]
+geotagsDAS <- geotagsMGU["Дом аспиранта и стажера МГУ <ДАС>",]
+geotagsFDS <- geotagsMGU["Филиал дома студента МГУ <ФДС>",]
 leaflet(geotagsEF) %>%
   addTiles() %>% 
   fitBounds(
@@ -117,7 +117,7 @@ leaflet(geotagsEF) %>%
     lng2 = geotagsDAS$longitude,
     lat2 = geotagsDAS$latitude
             ) %>%
-    addMarkers(~longitude,~latitude,popup=~htmlEscape(name))  
+    addMarkers(~longitude,~latitude,popup=htmlEscape(~name))  
 ```
 
 ### Пример 3. Много объектов. Границы карты определяются автоматически
@@ -128,7 +128,16 @@ leaflet(geotagsEF) %>%
 leaflet(data=geotagsMGU) %>%
   addTiles() %>% 
   clearBounds( ) %>%
-    addMarkers(~longitude,~latitude,popup=~htmlEscape(name))  
+    addMarkers(~longitude,~latitude,popup=htmlEscape(~name))  
 ```
 
+---
+
 Фрейм данных по умолчанию указан еще в функции `leaflet()`, а в остальных  функциях пакета leaflet мы можем ссылаться на столбцы этого dataframe в форме `~имяСтолбца` и указывать параметром `data=` другой dataframe, если нужно.
+
+---
+
+Текст внутри всплывающих окон (popup) объектов верстается как таблица по правилам языка HTML. В первом примере использовались теги `<b>` и `</b>` для выделения текста полужирным (bold) шрифтом, а тег `<br>` для разделения текста на строки внутри таблицы. Если в названии объекта есть специально трактуемые html-символы, например, символы "<" и ">" -- (greater than & less than)  в строке "<ДАС>", то строку нужно подвергнуть "санитарной обработке"  и заменить на их html-коды `&gt` и `&lt`.
+```{r}
+htmlEscape("<ДАС>")
+```
