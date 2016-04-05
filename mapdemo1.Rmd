@@ -9,7 +9,7 @@ output: html_document
 
 Документация библиотеки leaflet <https://rstudio.github.io/leaflet/> 
 
-Исходники этого примера:  <https://github.com/bivni/map-demo1> файл `mapdemo1.Rcmd`
+Исходники этого примера:  <https://github.com/bivni/map-demo1> файл `mapdemo1.Rmd`
 
 ### Включаем библиотеки 
 
