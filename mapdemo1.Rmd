@@ -60,7 +60,9 @@ caption(xtab) <- "Таблица 1. Координаты объектов МГУ
 print(xtab,type="html", caption.placement="bottom", html.table.attributes="border='3' width='100%'")
 
 ```
+
 ---
+
 Для удобства добавим в фрейм данных geotagsMGU столбец name, дублирующий названия строк. 
 
 ```{r}
@@ -74,16 +76,20 @@ geotagsMGU$name <- rownames(geotagsMGU)
 
 ### Пример 1. Один объект. Границы карты определяются масштабом и координатами центра
 
+---
 
 Создадим фрейм данных, состоящий только из строчки про Экономический факультет.
 
-```{r}
+```{r, echo=TRUE}
 geotagsEF <-  geotagsMGU["Экономический факультет МГУ",]
 ```
-```{r,results="asis"}
+
+```{r, echo=TRUE, results="asis"}
 geotagsEF %>% xtable(digits=4,auto=T) %>% print(type="html")
 ```
+
 ---
+
 Создадим объект-карту 
 
 ```{r}
