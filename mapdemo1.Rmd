@@ -32,7 +32,7 @@ library(htmltools) # вспомогательные функции при ген
 * долгота (longitude)
 
 
-```{r}
+```{r geotagsMGU-import}
 geotagsMGU <- read.table(header=TRUE,
                          as.is=TRUE,
                          row.names=1,
@@ -54,7 +54,7 @@ geotagsMGU <- read.table(header=TRUE,
 * параметр `auto=T` автоматически выравнивает текстовые столбцы по левому, а числовые -- по правому краю (по разрядам)
 * параметр `digits=5` -- 5 цифр после "запятой" в числовых полях
 
-```{r, results="asis"}
+```{r geotagsMGU-xtable, results="asis"}
 xtab <-  xtable(geotagsMGU,auto=T,digits=5 )
 caption(xtab) <- "Таблица 1. Координаты объектов МГУ"
 print(xtab,type="html", caption.placement="bottom", html.table.attributes="border='3' width='100%'")
@@ -65,7 +65,7 @@ print(xtab,type="html", caption.placement="bottom", html.table.attributes="borde
 
 Для удобства добавим в фрейм данных geotagsMGU столбец name, дублирующий названия строк. 
 
-```{r}
+```{r geotagsMGU-name}
 geotagsMGU$name <- rownames(geotagsMGU)
 ```
 
@@ -80,11 +80,8 @@ geotagsMGU$name <- rownames(geotagsMGU)
 
 Создадим фрейм данных, состоящий только из строчки про Экономический факультет.
 
-```{r, echo=TRUE}
+```{r geotagsEF, echo=TRUE, results="asis"}
 geotagsEF <-  geotagsMGU["Экономический факультет МГУ",]
-```
-
-```{r, echo=TRUE, results="asis"}
 geotagsEF %>% xtable(digits=4,auto=T) %>% print(type="html")
 ```
 
@@ -92,7 +89,7 @@ geotagsEF %>% xtable(digits=4,auto=T) %>% print(type="html")
 
 Создадим объект-карту 
 
-```{r}
+```{r emptyMap}
 m <- leaflet() %>% 
      addTiles() 
 ```
@@ -102,7 +99,7 @@ m <- leaflet() %>%
 
 Если нажать на точку, появится всплывающее окно (popup window)
 
-```{r}
+```{r setView-ex}
 m %>% 
   setView(lng=geotagsEF$longitude, lat=geotagsEF$latitude, zoom = 15) %>%
   addMarkers(lng=geotagsEF$longitude, lat=geotagsEF$latitude, 
@@ -113,7 +110,7 @@ m %>%
 
 Теперь указываем не масштаб, а границы. Хотим чтобы карта включала прямоугольник, диагональ которого проведена между 2-мя общежитиями ДАС и ФДС. Используем функцию `fitBounds()` для определения границ карты.
 
-```{r}
+```{r setBounds-ex}
 geotagsDAS <- geotagsMGU["Дом аспиранта и стажера МГУ <ДАС>",]
 geotagsFDS <- geotagsMGU["Филиал дома студента МГУ <ФДС>",]
 leaflet(geotagsEF) %>%
@@ -131,7 +128,7 @@ leaflet(geotagsEF) %>%
  
 В этом примере выводим сразу несколько точек и функция `clearBounds()`  устанавливает автоматическое определение границ карты по разбросу точек.
 
-```{r}
+```{r clearBounds-ex}
 leaflet(data=geotagsMGU) %>%
   addTiles() %>% 
   clearBounds( ) %>%
@@ -145,6 +142,6 @@ leaflet(data=geotagsMGU) %>%
 ---
 
 Текст внутри всплывающих окон (popup) объектов верстается как таблица по правилам языка HTML. В первом примере использовались теги `<b>` и `</b>` для выделения текста полужирным (bold) шрифтом, а тег `<br>` для разделения текста на строки внутри таблицы. Если в названии объекта есть специально трактуемые html-символы, например, символы "<" и ">" -- (greater than & less than)  в строке "<ДАС>", то строку нужно подвергнуть "санитарной обработке" функцией `htmlEscape()` и заменить тем самым спецсимволы на их html-коды `&gt` и `&lt`, чтобы они не ломали структуру web-страницы.
-```{r}
+```{r htmlEscape-ex}
 htmlEscape("<ДАС>")
 ```
