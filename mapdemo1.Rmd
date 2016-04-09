@@ -145,4 +145,20 @@ leaflet(data=geotagsMGU) %>%
 htmlEscape("<ДАС>")
 ```
 
+
+### Пример 4. Добавление "иконки" 
+ Если у Вас есть адрес (URL) подходящей картинки для маркера, то можно создать по нему объект icon и использовать его.
+ 
+```{r icon1}
+iconEFURL <-  "http://www.econ.msu.ru/images/EFLogo-130.png"
+iconEF <- makeIcon(iconUrl = iconEFURL,iconWidth =60,iconHeight = 40)
+m %>% 
+  setView(lng=geotagsEF$longitude, lat=geotagsEF$latitude, zoom = 15) %>%
+  addMarkers(lng=geotagsEF$longitude, lat=geotagsEF$latitude, 
+    popup="<b>ЭФ МГУ</b><br><a href='http://www.econ.msu.ru'>сайт факультета</a>",icon=iconEF)
+
+```
+
+В этом примере изображение "лежит" на земле. Если вы хотите "приподнятое" изображение, то нужно указать еще  и иконку, изображающую тень основного маркера.
+
 - - - 
