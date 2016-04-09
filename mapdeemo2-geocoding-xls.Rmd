@@ -1,7 +1,7 @@
 ---
-title: "���������� ��������������"
+title: "Используем геокодирование"
 author: "Ilya Kochergin"
-date: '9 ������ 2016 � '
+date: '9 апреля 2016 г '
 output: html_document
 ---
 
@@ -9,17 +9,29 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+
+## Адреса нужных нам учереждений достаем из таблицы Excel и наносим на карту
+
+### Формулировка задачи
+
+Я недавно столкнулся с такой задачей:
+
+Мне нужно получить электронную подпись для отправки документов в налоговою инспекцию через сайт Госуслуги. С сайта <http://www.nalog.ru/files/docs/uc/udost_centr.xls> я скачал таблицу excel с адресами уполномоченных фирм -- удостоверяющих центров. И хочу по карте посмотреть, какие из них находятся рядом с метро Университет
+
+
+### Подключение библиотек 
 ```{r libaries ,message=FALSE,warning=FALSE}
-library(leaflet) # ��������� ����
-library(dplyr)   # �������� %>% (pipe) � ������� ����������� � �������
-library(xtable)  # ����� ������ � ���������� LaTeX � Web
-library(htmltools) # ��������������� ������� ��� ��������� web content'�
-library(ggmap) # ���������� ��������� ���� �� ������ ���������� ����������� ���������� ggplot2
-library(readxl)
+library(leaflet) # рисование карт
+library(dplyr)   # оператор %>% (pipe) и функции манипуляций с данными
+library(xtable)  # вывод таблиц в документах LaTeX и Web
+library(htmltools) # вспомогательные функции при генерации web content'а
+library(ggmap) # библиотека рисования карт на основе улучшенной графической библиотеки ggplot2
+library(readxl) # Импорт данных из Excel 
 ```
 
 
-### ������ ������ 
+### Импорт данных из файла Excel
 
 ```{r import}
 all_auth_centers <-  read_excel("data/udost_centr.xls") 
@@ -28,7 +40,7 @@ colnames(all_auth_centers)  <- c("name","address","url")
                                
 ```
 
-������� ������ 
+Покажем данные 
 
 ```{r, results='asis'}
 all_auth_centers %>% head() %>% 
@@ -37,22 +49,26 @@ all_auth_centers %>% head() %>%
 
 - - - 
 
-��� ������ ����� ������ ������
+Нам сейчас нужна только Москва
 
 ```{r}
-moscow_auth_centers <- as.data.frame(filter(all_auth_centers,grepl("������",address)))
+moscow_auth_centers <- as.data.frame(filter(all_auth_centers,grepl("Москва",address)))
 nrow(moscow_auth_centers)
 str(moscow_auth_centers)
 ```
 
-��������� ������� � ������������ 
+### Используем геокодирование 
+
+Мы будет при помощи функции `mutate_geocode()` из библиотеки  `ggmap  ` к существующему фрейму данных добавлять столбцы с коордианатами 
+
+
 
 
 ```{r geocoding, eval=T, cache=TRUE,cache.lazy=TRUE,message=FALSE}
   map_data <-  moscow_auth_centers %>%  mutate_geocode(address)
 ```
 
-������� ������ 
+Покажем данные 
 
 ```{r, results='asis',eval=T}
 map_data %>% 
@@ -61,33 +77,46 @@ map_data %>%
 
 - - - 
 
-������ ������ ��� ���������
+Удалим адреса без координат
 
 ```{r}
 map_data <- na.omit(map_data)
 nrow(map_data)
 ```
 
-������� �� �����
+Выведем на карту
 
 ```{r,eval=T}
 leaflet(data=map_data) %>% addTiles() %>% 
   clearBounds() %>% 
   addMarkers(lng=~lon, lat=~lat,popup=paste(sep = "<br>",htmlEscape(map_data$name),
                                      htmlEscape(map_data$address),
-                                     map_data$url))
-
-                                     #                                      paste0("<a href=\'",map_data$url,"\'>����</a>"))
+                                   map_data$url))
 
 ```
 
 
-������� ���� ���������� 
+Находим наши координаты 
 
 ```{r,eval=T}
-ourAddress <- "����� �����������" 
+ourAddress <- "Moskva, metro Universitet " 
+# ourAddress <- "Москва, метро Университет" 
 
 ourCoord <- geocode(ourAddress)
 ourCoord
 ```
+
+
+Выводим адреса удостоверяющих центров рядом с метро Университет
+
+
+```{r}
+leaflet(data=map_data) %>% addTiles() %>% 
+  setView(lat=ourCoord$lat, lng=ourCoord$lon,zoom=12) %>% 
+  addMarkers(lng=~lon, lat=~lat,popup=paste(sep = "<br>",htmlEscape(map_data$name),
+                                     htmlEscape(map_data$address),
+                                   map_data$url))
+
+```
+
 
