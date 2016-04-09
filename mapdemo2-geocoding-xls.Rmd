@@ -130,7 +130,7 @@ leaflet(data=map_data) %>% addTiles() %>%
   addMarkers(lng=~lon, lat=~lat,popup=paste(sep = "<br>",htmlEscape(map_data$name),
                                      htmlEscape(map_data$address),
                                    map_data$url)) %>% 
-  addCircleMarkers(fillColor = "red",lng=ourCoord$lon, lat=ourCoord$lat,label = "метро Университет")
+  addCircleMarkers(fillColor = "red",lng=ourCoord$lon, lat=ourCoord$lat,popup = "метро Университет")
 
 ```
 
