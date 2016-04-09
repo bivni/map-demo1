@@ -21,7 +21,7 @@ library(ggmap) # библиотека рисования карт на осно�
 ### Импорт данных 
 
 ```{r import}
-all_auth_centers <-  read.csv2("data/udost_centr_cp1251.csv",skip=1,fileEncoding = "CP1251", colClasses = rep("character",2),col.names = c("name","address","url"),
+all_auth_centers <-  read.csv2("data/udost_centr_cp1251.csv",skip=1,fileEncoding = "CP1251", colClasses = rep("character",3),col.names = c("name","address","url"),
                                as.is=T) 
                     
                                
@@ -36,7 +36,7 @@ all_auth_centers %>% head() %>%
 
 - - - 
 
-Нам нужна только Москва
+Нам сейчас нужна только Москва
 
 ```{r}
 moscow_auth_centers <- filter(all_auth_centers,grepl("Москва",address))
@@ -47,7 +47,7 @@ str(moscow_auth_centers)
 Добавляем столбцы с координатами 
 
 
-```{r geocoding,eval=T}
+```{r geocoding, eval=T, cache=TRUE,cache.lazy=TRUE,message=FALSE}
 map_data <-  moscow_auth_centers %>%  mutate_geocode(address)
 ```
 
@@ -59,3 +59,23 @@ map_data %>%
 ```
 
 - - - 
+
+Удалим адреса без координат
+
+```{r}
+map_data <- na.omit(map_data)
+nrow(map_data)
+```
+
+Выведем на карту
+
+```{r,eval=T}
+leaflet(data=map_data) %>% addTiles() %>% 
+  clearBounds() %>% 
+  addMarkers(lng=~lon, lat=~lat)
+
+```
+
+
+mutate
+
