@@ -40,7 +40,7 @@ colnames(all_auth_centers)  <- c("name","address","url")
                                
 ```
 
-Покажем данные 
+Покажем данные 6 строк из загруженных данных
 
 ```{r, results='asis'}
 all_auth_centers %>% head() %>% 
