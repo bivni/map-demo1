@@ -5,9 +5,11 @@ date: '9 апреля 2016 г '
 output: html_document
 ---
 
-Исходный файл этого документа `mapdeemo2-geocoding-xls.Rmd`
+Исходный файл этого документа `mapdemo2-geocoding-xls.Rmd`
 в проекте <https://github.com/bivni/map-demo1>
-Результат (HTML): <http://rpubs.com/ikochergin/169664> 
+
+Результат (HTML): <http://rpubs.com/ikochergin/169669> 
+
 ###Краткое содержание:
 
 Берем список нужных учреждений из таблицы Excel.
