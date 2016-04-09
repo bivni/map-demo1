@@ -48,7 +48,7 @@ str(moscow_auth_centers)
 Добавляем столбцы с координатами 
 
 
-```{r geocoding, eval=T, cache=FALSE,cache.lazy=TRUE,message=FALSE}
+```{r geocoding, eval=T, cache=TRUE,cache.lazy=TRUE,message=FALSE}
   map_data <-  moscow_auth_centers %>%  mutate_geocode(address)
 ```
 
@@ -73,7 +73,11 @@ nrow(map_data)
 ```{r,eval=T}
 leaflet(data=map_data) %>% addTiles() %>% 
   clearBounds() %>% 
-  addMarkers(lng=~lon, lat=~lat)
+  addMarkers(lng=~lon, lat=~lat,popup=paste(sep = "<br>",htmlEscape(map_data$name),
+                                     htmlEscape(map_data$address),
+                                     map_data$url))
+
+                                     #                                      paste0("<a href=\'",map_data$url,"\'>сайт</a>"))
 
 ```
 
