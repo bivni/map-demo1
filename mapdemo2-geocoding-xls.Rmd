@@ -5,6 +5,14 @@ date: '9 апреля 2016 г '
 output: html_document
 ---
 
+Исходный файл этого документа `mapdeemo2-geocoding-xls.Rmd`
+в проекте <https://github.com/bivni/map-demo1>
+Результат (HTML): <http://rpubs.com/ikochergin/169664> 
+###Краткое содержание:
+
+Берем список нужных учреждений из таблицы Excel.
+Используем geocode() и mutate_geocode() из библиотеки ggmap  для получения координат по адресам и рисуем карту при помощи библиотеки leaflet
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -12,6 +20,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## Адреса нужных нам учереждений достаем из таблицы Excel и наносим на карту
+
+
 
 ### Формулировка задачи
 
@@ -77,7 +87,7 @@ map_data %>%
 
 - - - 
 
-Удалим адреса без координат
+Удалим адреса без координат. Функция na.omit() не выдает строку фрейма данных, если хотя бы одно из полей имеет значение NA (Not Available).
 
 ```{r}
 map_data <- na.omit(map_data)
@@ -96,11 +106,13 @@ leaflet(data=map_data) %>% addTiles() %>%
 ```
 
 
-Находим наши координаты 
+Находим наши координаты (Метро университет). Под  Windows функция `geocode()` видимо отправляет заппрос к Google не в той кодировке -- пришлось транслитерировать адрес латинстким буквами.
 
 ```{r,eval=T}
-ourAddress <- "Moskva, metro Universitet " 
+ourAddress <- "Moskva, metro Universitet" 
+# In Mac OS X following line works fine:
 # ourAddress <- "Москва, метро Университет" 
+# ourAddress <- iconv("Москва, метро Университет",from="UTF-8",to="CP1251")
 
 ourCoord <- geocode(ourAddress)
 ourCoord
