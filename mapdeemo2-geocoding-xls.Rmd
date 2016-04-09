@@ -1,0 +1,89 @@
+---
+title: "Используем геокодирование"
+author: "Ilya Kochergin"
+date: '9 апреля 2016 г '
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libaries ,message=FALSE,warning=FALSE}
+library(leaflet) # рисование карт
+library(dplyr)   # оператор %>% (pipe) и функции манипуляций с данными
+library(xtable)  # вывод таблиц в документах LaTeX и Web
+library(htmltools) # вспомогательные функции при генерации web content'а
+library(ggmap) # библиотека рисования карт на основе улучшенной графической библиотеки ggplot2
+library(readxl)
+```
+
+
+### Импорт данных 
+
+```{r import}
+all_auth_centers <-  read_excel("data/udost_centr.xls") 
+colnames(all_auth_centers)  <- c("name","address","url")
+                    
+                               
+```
+
+Покажем данные 
+
+```{r, results='asis'}
+all_auth_centers %>% head() %>% 
+  xtable(auto=T) %>% print("html")          
+```
+
+- - - 
+
+Нам сейчас нужна только Москва
+
+```{r}
+moscow_auth_centers <- as.data.frame(filter(all_auth_centers,grepl("Москва",address)))
+nrow(moscow_auth_centers)
+str(moscow_auth_centers)
+```
+
+Добавляем столбцы с координатами 
+
+
+```{r geocoding, eval=T, cache=FALSE,cache.lazy=TRUE,message=FALSE}
+  map_data <-  moscow_auth_centers %>%  mutate_geocode(address)
+```
+
+Покажем данные 
+
+```{r, results='asis',eval=T}
+map_data %>% 
+  xtable(auto=T) %>% print("html")          
+```
+
+- - - 
+
+Удалим адреса без координат
+
+```{r}
+map_data <- na.omit(map_data)
+nrow(map_data)
+```
+
+Выведем на карту
+
+```{r,eval=T}
+leaflet(data=map_data) %>% addTiles() %>% 
+  clearBounds() %>% 
+  addMarkers(lng=~lon, lat=~lat)
+
+```
+
+
+Находим наши координаты 
+
+```{r,eval=T}
+ourAddress <- "метро Университет" 
+
+ourCoord <- geocode(ourAddress)
+ourCoord
+```
+

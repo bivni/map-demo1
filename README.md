@@ -1,3 +1,6 @@
+---
+output: html_document
+---
 # Демонстрация нанесения данных на карту
 
 Используется библиотека `leaflet`
@@ -12,4 +15,9 @@ ___
 
 Результирующая веб-страница:
 <http://rpubs.com/ikochergin/167748>
+
+
+
+
+part 2 <http://rpubs.com/ikochergin/169636>
 
