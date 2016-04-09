@@ -129,7 +129,8 @@ leaflet(data=map_data) %>% addTiles() %>%
   setView(lat=ourCoord$lat, lng=ourCoord$lon,zoom=12) %>% 
   addMarkers(lng=~lon, lat=~lat,popup=paste(sep = "<br>",htmlEscape(map_data$name),
                                      htmlEscape(map_data$address),
-                                   map_data$url))
+                                   map_data$url)) %>% 
+  addCircleMarkers(fillColor = "red",lng=ourCoord$lon, lat=ourCoord$lat,label = "метро Университет")
 
 ```
 
