@@ -1,0 +1,61 @@
+---
+title: "Используем геокодирование"
+author: "Ilya Kochergin"
+date: '9 апреля 2016 г '
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libaries ,message=FALSE,warning=FALSE}
+library(leaflet) # рисование карт
+library(dplyr)   # оператор %>% (pipe) и функции манипуляций с данными
+library(xtable)  # вывод таблиц в документах LaTeX и Web
+library(htmltools) # вспомогательные функции при генерации web content'а
+library(ggmap) # библиотека рисования карт на основе улучшенной графической библиотеки ggplot2
+```
+
+
+### Импорт данных 
+
+```{r import}
+all_auth_centers <-  read.csv2("data/udost_centr_cp1251.csv",skip=1,fileEncoding = "CP1251", colClasses = rep("character",2),col.names = c("name","address","url"),
+                               as.is=T) 
+                    
+                               
+```
+
+Покажем данные 
+
+```{r, results='asis'}
+all_auth_centers %>% head() %>% 
+  xtable(auto=T) %>% print("html")          
+```
+
+- - - 
+
+Нам нужна только Москва
+
+```{r}
+moscow_auth_centers <- filter(all_auth_centers,grepl("Москва",address))
+nrow(moscow_auth_centers)
+str(moscow_auth_centers)
+```
+
+Добавляем столбцы с координатами 
+
+
+```{r geocoding,eval=T}
+map_data <-  moscow_auth_centers %>%  mutate_geocode(address)
+```
+
+Покажем данные 
+
+```{r, results='asis',eval=T}
+map_data %>% 
+  xtable(auto=T) %>% print("html")          
+```
+
+- - - 
