@@ -116,9 +116,9 @@ leaflet(data=map_data) %>% addTiles() %>%
 _Примечание._ Под  Windows функция `geocode()` видимо отправляет запрос к Google не в той кодировке -- пришлось транслитерировать адрес латинскими буквами.
 
 ```{r,eval=T}
-ourAddress <- "Moskva, metro Universitet" 
+ ourAddress <- "Moskva, stancia metro Universitet" 
 # In Mac OS X following line works fine:
-# ourAddress <- "Москва, метро Университет" 
+ # ourAddress <- "Москва, станция метро Университет" 
 
 ourCoord <- geocode(ourAddress)
 ourCoord
@@ -138,4 +138,12 @@ leaflet(data=map_data) %>% addTiles() %>%
 
 ```
 
+- - - 
 
+А можно ли было не записывать нам вручную адрес латинскими буквами?  Конечно можно: 
+
+* Воспользоваться фукцией для перевода в латиницу `stri_trans_general("Москва, Станция метро Университет", "cyrillic-latin; nfd; [:nonspacing mark:] remove; nfc")`
+
+* Воспользоваться фунцией для перевода из одной русской в другую русскую кодировку `geocode(iconv("станция метро Университет",from = "1251",to="UTF-8"))`
+
+- - -
