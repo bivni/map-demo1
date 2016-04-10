@@ -64,20 +64,23 @@ all_auth_centers %>% head() %>%
 Нам сейчас нужна только Москва
 
 ```{r}
-moscow_auth_centers <- as.data.frame(filter(all_auth_centers,grepl("Москва",address)))
+moscow_auth_centers <- filter(all_auth_centers,grepl("Москва",address))
 nrow(moscow_auth_centers)
 str(moscow_auth_centers)
 ```
 
 ### Используем геокодирование 
 
-Мы будет при помощи функции `mutate_geocode()` из библиотеки  `ggmap  ` к существующему фрейму данных добавлять столбцы с координатами 
+Мы будет при помощи функции `mutate_geocode()` из библиотеки  `ggmap  ` к существующему фрейму данных добавлять столбцы с координатами `lon` и `lat`. 
+
+_Примечание._ Функция `mutate_geocode()` оказалась капризной и выдает ошибку при применении к локальным data.frame (имеющим дополнительный атрибут класса `tbl_df` помимо `data.frame` -- посмотрите вывод `str(moscow_auth_centers)` ). Приходится перед дальнейшим применением "очистить" фрейм данных  функцией `as.data.frame()` 
 
 
 
 
 ```{r geocoding, eval=T, cache=TRUE,cache.lazy=TRUE,message=FALSE}
-  map_data <-  moscow_auth_centers %>%  mutate_geocode(address)
+map_data <-  as.data.frame(moscow_auth_centers)   %>% 
+               mutate_geocode(address)
 ```
 
 Покажем данные 
@@ -108,13 +111,14 @@ leaflet(data=map_data) %>% addTiles() %>%
 ```
 
 
-Находим наши координаты (Метро университет). Под  Windows функция `geocode()` видимо отправляет запрос к Google не в той кодировке -- пришлось транслитерировать адрес латинскими буквами.
+Находим наши координаты (Метро университет).
+
+_Примечание._ Под  Windows функция `geocode()` видимо отправляет запрос к Google не в той кодировке -- пришлось транслитерировать адрес латинскими буквами.
 
 ```{r,eval=T}
 ourAddress <- "Moskva, metro Universitet" 
 # In Mac OS X following line works fine:
 # ourAddress <- "Москва, метро Университет" 
-# ourAddress <- iconv("Москва, метро Университет",from="UTF-8",to="CP1251")
 
 ourCoord <- geocode(ourAddress)
 ourCoord
