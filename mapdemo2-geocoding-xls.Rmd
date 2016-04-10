@@ -118,7 +118,7 @@ _Примечание._ Под  Windows функция `geocode()` видимо 
 
 ```{r,eval=T}
  ourAddress <- "Moskva, metro Universitet" 
- In Mac OS X following line works fine:
+ # In Mac OS X following line works fine:
  # ourAddress <- "Москва, станция метро Университет" 
 
 ourCoord <- geocode(ourAddress)
