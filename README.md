@@ -16,6 +16,8 @@ output: html_document
 
 * * *
 
+$$ f(x)=\frac{\sin x }{x}  $$
+
 
 Используется библиотека `leaflet`
 
