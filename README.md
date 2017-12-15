@@ -7,8 +7,14 @@ output: html_document
 ### todo 
 
 * улучшить
+* углубить **bold** 
 
-* углубить
+| lala | topolya |
+|:----|:------:|
+|123 | abcde|
+|2343434| ddd| 
+
+* * *
 
 
 Используется библиотека `leaflet`
