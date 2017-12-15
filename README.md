@@ -6,7 +6,7 @@ output: html_document
 
 ### todo 
 
-* улучшить
+* улучшить *italic*
 * углубить **bold** 
 
 | lala | topolya |
